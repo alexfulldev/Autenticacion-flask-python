@@ -1,19 +1,9 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+		user: null, 
+		token: false
+
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -36,24 +26,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ user: data.user, token: data.token })
 					localStorage.setItem('token', data.token)
 					
-					// don't forget to return something, that is how the async resolves
+					
 					return data;
 				}catch(error){
 					console.log("Error loading message from backend", error)
 				}
 			},
-			getMessage: async () => {
-				try{
-					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
-					const data = await resp.json()
-					setStore({ message: data.message })
-					// don't forget to return something, that is how the async resolves
+			login: async (email,password) => {
+				const response = await fetch(process.env.BACKEND_URL + "/api/login", {
+					method:"POST",
+					headers:{"Content-Type": 'application/json'},
+					body: JSON.stringify({email, password})
+				})
+				if(!response.ok) throw Error("Hay un problema con el login")
+
+					if(response.status === 401){throw ("credenciales no validos")}
+					else if(response.status === 400){throw ("email o password incorrectos")}
+					const data = await response.json()
+					localStorage.setItem("token",data.token)
+					setStore({ user: data.user})
 					return data;
-				}catch(error){
-					console.log("Error loading message from backend", error)
-				}
+				
+				
 			},
+			
 			changeColor: (index, color) => {
 				//get the store
 				const store = getStore();

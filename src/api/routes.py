@@ -27,14 +27,21 @@ def handle_hello():
 def login():
     email = request.json.get('email', None)
     password = request.json.get('password', None)
-    #user = User.query.filter_by(email=email, password=password).first()
-    user = User.query.filter_by(email=email).first()
-    if user:
-        if (user.password == password):
-            acces_token = create_access_token(identity=user.id)
-            return jsonify({'success':True, 'user': user.serialize(), 'token': acces_token}), 200
-        return jsonify({'success':False, 'msg': 'La combinación de usuario y contrseña no es válida'}), 400
-    return jsonify({'success':False, 'msg': 'El correo electrónico no existe'}),404
+    user = User.query.filter_by(email=email, password=password).first()
+
+    if user is None:
+        return jsonify({"email o contraseña erroneas"}), 401
+        
+    acces_token = create_access_token(identity=user.id)
+    return jsonify({"token": acces_token, "user_id": user.id})
+    
+    # user = User.query.filter_by(email=email).first()
+    # if user:
+    #     if (user.password == password):
+    #         acces_token = create_access_token(identity=user.id)
+    #         return jsonify({'success':True, 'user': user.serialize(), 'token': acces_token}), 200
+    #     return jsonify({'success':False, 'msg': 'La combinación de usuario y contrseña no es válida'}), 400
+    # return jsonify({'success':False, 'msg': 'El correo electrónico no existe'}),404
 
 @api.route('/register', methods=['POST'])
 def register():

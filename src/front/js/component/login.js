@@ -1,56 +1,49 @@
 import React, { useState } from "react";
 
 export const Login = () => {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-        name: '',
-        username: '',
-    });
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const [login, setLogin] = useState(true); // Estado para alternar entre login y registro
     const [error, setError] = useState(null); // Estado para manejar errores
 
     // Maneja los cambios en los campos del formulario
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
+   
 
     // Maneja el envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const msg = await actions.login(email,password)
+        console.log(msg)
         setError(null);
 
-        try {
-            const response = await fetch('https://backend-api.com/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: formData.email,
-                    password: formData.password,
-                }),
-            });
+        // try {
+        //     const response = await fetch('https://humble-space-garbanzo-7v7j997q7q47fpwr7-3001.app.github.dev/admin/user/api/login', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({
+        //             email: formData.email,
+        //             password: formData.password,
+        //         }),
+        //     });
 
-            if (!response.ok) {
-                throw new Error('Invalid credentials');
-            }
+        //     if (!response.ok) {
+        //         throw new Error('Invalid credentials');
+        //     }
 
-            const data = await response.json();
-            const token = data.token; // Suponiendo que el token se devuelve en 'data.token'
+        //     const data = await response.json();
+        //     const token = data.token; // Suponiendo que el token se devuelve en 'data.token'
 
-            // Guarda el token en el localStorage o sessionStorage
-            localStorage.setItem('token', token);
+        //     // Guarda el token en el localStorage o sessionStorage
+        //     localStorage.setItem('token', token);
 
-            // Redirigir al usuario o realizar alguna acción después del login exitoso
-            console.log('Login successful! Token:', token);
+        //     // Redirigir al usuario o realizar alguna acción después del login exitoso
+        //     console.log('Login successful! Token:', token);
 
-        } catch (error) {
-            setError(error.message);
-        }
+        // } catch (error) {
+        //     setError(error.message);
+        // }
     };
 
     return (
@@ -74,8 +67,8 @@ export const Login = () => {
                                     id="floatingName"
                                     placeholder="Name"
                                     name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
+                                    value={email}
+                                    onChange={(e)=> setEmail(e.target.value)}
                                 />
                                 <label htmlFor="floatingName">Name</label>
                             </div>
@@ -86,37 +79,13 @@ export const Login = () => {
                                     id="floatingUsername"
                                     placeholder="Username"
                                     name="username"
-                                    value={formData.username}
-                                    onChange={handleChange}
+                                    value={password}
+                                    onChange={(e)=> setPassword(e.target.value)}
                                 />
                                 <label htmlFor="floatingUsername">Username</label>
                             </div>
                         </>
                     )}
-                    <div className="form-floating mb-3">
-                        <input
-                            type="email"
-                            className="form-control"
-                            id="floatingInput"
-                            placeholder="name@example.com"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="floatingInput">Email address</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                        <input
-                            type="password"
-                            className="form-control"
-                            id="floatingPassword"
-                            placeholder="Password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="floatingPassword">Password</label>
-                    </div>
 
                     {error && <p style={{ color: 'red' }}>{error}</p>} {/* Muestra los errores */}
 

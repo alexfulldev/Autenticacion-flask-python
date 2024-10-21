@@ -25,6 +25,7 @@ def handle_hello():
 
 @api.route('/login', methods=['POST'])
 def login():
+    print(request.get_json())
     email = request.json.get('email', None)
     password = request.json.get('password', None)
     user = User.query.filter_by(email=email, password=password).first()

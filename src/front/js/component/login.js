@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
+import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
 
 export const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [login, setLogin] = useState(true); // Estado para alternar entre login y registro
-    const [error, setError] = useState(null); // Estado para manejar errores
-
-    // Maneja los cambios en los campos del formulario
+    const [error, setError] = useState(null); 
+    const {store,actions}=useContext(Context)
+    
    
 
-    // Maneja el envío del formulario
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("Hola");
+        
         const msg = await actions.login(email,password)
         console.log(msg)
         setError(null);
@@ -55,52 +58,50 @@ export const Login = () => {
                         alt="Logo de mi aplicación"
                     />
                 </div>
-                <h1 className="h3 mb-3 fw-normal">{login ? "Please sign in" : "Please register"}</h1>
+                <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
 
                 <form onSubmit={handleSubmit}>
-                    {!login && (
-                        <>
                             <div className="form-floating mb-3">
                                 <input
                                     type="text"
                                     className="form-control"
                                     id="floatingName"
-                                    placeholder="Name"
-                                    name="name"
+                                    placeholder="Email"
+                                    name="email"
                                     value={email}
                                     onChange={(e)=> setEmail(e.target.value)}
                                 />
-                                <label htmlFor="floatingName">Name</label>
+                                <label htmlFor="floatingName">Email</label>
                             </div>
                             <div className="form-floating mb-3">
                                 <input
-                                    type="text"
+                                    type="password"
                                     className="form-control"
                                     id="floatingUsername"
-                                    placeholder="Username"
-                                    name="username"
+                                    placeholder="password"
+                                    name="password"
                                     value={password}
                                     onChange={(e)=> setPassword(e.target.value)}
                                 />
-                                <label htmlFor="floatingUsername">Username</label>
+                                <label htmlFor="floatingUsername">Password</label>
                             </div>
-                        </>
-                    )}
+                        
+                
 
-                    {error && <p style={{ color: 'red' }}>{error}</p>} {/* Muestra los errores */}
+                    {error && <p style={{ color: 'red' }}>{error}</p>} {}
 
                     <button className="w-100 btn btn-lg btn-primary" type="submit">
-                        {login ? 'Sign in' : 'Register'}
+                        Sign in
                     </button>
 
                     <p className="mt-3">
-                        {login ? "Don't have an account?" : "Already have an account?"}
-                        <span
+                        Already have an account?
+                        <Link
                             style={{ cursor: 'pointer', color: 'blue' }}
-                            onClick={() => setLogin(!login)} // Cambia entre login y registro
+                            to="/"
                         >
-                            {login ? ' Register' : ' Login'}
-                        </span>
+                            Register 
+                        </Link>
                     </p>
 
                     <p className="mt-5 mb-3 text-muted">&copy; 2024</p>

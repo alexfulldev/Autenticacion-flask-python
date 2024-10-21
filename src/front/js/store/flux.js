@@ -33,6 +33,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			login: async (email,password) => {
+				console.log(email);
+				console.log(password);
+				
+				
 				const response = await fetch(process.env.BACKEND_URL + "/api/login", {
 					method:"POST",
 					headers:{"Content-Type": 'application/json'},
